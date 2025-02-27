@@ -21,6 +21,11 @@ export class HttpClientBase {
     return response.data;
   }
 
+  async put<T>(url: string, data: Record<string, any> = {}, headers: Record<string, string> = {}): Promise<T> {
+    const response = await firstValueFrom(this.httpService.put<T>(url, data, { headers }));
+    return response.data;
+  }
+
   async delete<T>(url: string, headers: Record<string, string> = {}): Promise<T> {
     const response = await firstValueFrom(this.httpService.delete<T>(url, { headers }));
     return response.data;

@@ -1,6 +1,6 @@
 import { MicrositeConfig, MicrositeDetails } from '@core/interfaces/campaigns.interfaces';
 
-export const MICROSITE_CONFIG: MicrositeConfig = {
+const MICROSITE_CONFIG: MicrositeConfig = {
   sz: {
     name: 'TENA',
     url: 'https://www.circulotena.com.mx/',

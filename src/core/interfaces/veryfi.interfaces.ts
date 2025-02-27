@@ -191,3 +191,35 @@ export interface VeryfiVendor {
   vat_number?: string | null;
   web?: string | null;
 }
+
+export interface DeviceData {
+  browser_fingerprint: {
+    ua: string;
+    browser_name?: string;
+    browser_version?: string;
+    browser_major?: string;
+    engine_name?: string;
+    engine_version?: string;
+    os_name?: string;
+    os_version?: string;
+    device_vendor?: string;
+    device_model?: string;
+    timeZone?: string;
+    tzOffset?: number;
+    screenSize?: string;
+    isCookiesEnabled?: boolean;
+    domLocalStorage?: boolean;
+    domSessionStorage?: boolean;
+    indexedDB?: boolean;
+    canvasFingerprint?: string;
+    webglRenderer?: string;
+    isDntHeaderEnabled?: boolean;
+    language?: string;
+    platform?: string;
+    maxTouchpoints?: number;
+    hardwareConcurrency?: number;
+    deviceMemory?: number;
+  };
+  uuid: string;
+  source: string;
+}
