@@ -1,14 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { GetParticipantDto } from './dtos/get-participant.dto';
+import { RegisterSaleDto } from './dtos/register-sale.dto';
+import { GetParticipantResponse, SaleResponse } from '@core/interfaces/superlikers.interefaces';
 import { HttpClientBase } from '@shared/services/http-client-base/http-client-base.service';
 import { EnvService } from '@shared/services/env/env.service';
-import { GetParticipantResponse } from '@core/interfaces/superlikers.interefaces';
+import { handleHttpError } from '@shared/utils/http-error-handler';
 
 @Injectable()
 export class SuperlikersService {
   constructor(
-    private readonly httpClientBase: HttpClientBase,
+    private readonly http: HttpClientBase,
     private readonly envService: EnvService,
   ) {}
 
@@ -30,11 +32,34 @@ export class SuperlikersService {
     };
 
     try {
-      const response = await this.httpClientBase.get<GetParticipantResponse>(url, params, headers);
-      return { ok: true, participant: response.object };
-    } catch (error: unknown) {
-      console.log(error);
-      throw new BadRequestException('An unexpected error occurred');
+      const response = await this.http.get<GetParticipantResponse>(url, params, headers);
+      return response.object;
+    } catch (err: unknown) {
+      console.log(err);
+      handleHttpError(err);
+    }
+  }
+
+  async registerSale(registerSaleDto: RegisterSaleDto) {
+    const { campaign, uid, ref, products, date, properties, discount, category } = registerSaleDto;
+
+    const config = this.envService.getConfig(campaign);
+    const { SUPERLIKERS_URL, SUPERLIKERS_CAMPAIGN_ID, SUPERLIKERS_API_KEY } = config;
+
+    const url = `${SUPERLIKERS_URL}/retail/buy`;
+
+    const body = { api_key: SUPERLIKERS_API_KEY, campaign: SUPERLIKERS_CAMPAIGN_ID, distinct_id: uid, ref, products };
+    if (date) body['date'] = date;
+    if (properties) body['properties'] = properties;
+    if (discount) body['discount'] = discount;
+    if (category) body['category'] = category;
+
+    try {
+      const response = await this.http.post<SaleResponse>(url, body);
+      return response.invoice;
+    } catch (err: unknown) {
+      console.log(err);
+      handleHttpError(err);
     }
   }
 }

@@ -6,10 +6,12 @@ export interface MicrositeDetails {
   name: string;
   url: string;
   uid: string;
-  additionalProductsFields: {
-    provider: string;
-    line: string;
-  };
+  additionalProductsFields: AdditionalFields;
   tags: string[];
   validationMessages: Record<string, string>;
+}
+
+export interface AdditionalFields {
+  provider: string;
+  line: string;
 }
