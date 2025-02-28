@@ -1,13 +1,25 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { VeryfiService } from './veryfi.service';
-import { ProcessDocumentDto } from './dtos/process-document.dto';
+import { UploadDocumentDto } from './dtos/upload-document.dto';
+import { UpdateDocumentDto } from './dtos/update-document.dto';
+import { AddTagToDocumentDto } from './dtos/add-tag-document.dto';
 
 @Controller('veryfi')
 export class VeryfiController {
   constructor(private readonly veryfiService: VeryfiService) {}
 
   @Post('upload')
-  uploadDocument(@Body() processDocumentDto: ProcessDocumentDto) {
-    return this.veryfiService.processDocument(processDocumentDto);
+  uploadDocument(@Body() uploadDocumentDto: UploadDocumentDto) {
+    return this.veryfiService.uploadDocument(uploadDocumentDto);
+  }
+
+  @Post('update')
+  updateDocument(@Body() updateDocumentDto: UpdateDocumentDto) {
+    return this.veryfiService.updateDocument(updateDocumentDto);
+  }
+
+  @Post('tags')
+  addTagToDocument(@Body() addTagToDocumentDto: AddTagToDocumentDto) {
+    return this.veryfiService.addTagToDocument(addTagToDocumentDto);
   }
 }

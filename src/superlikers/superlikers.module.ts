@@ -7,5 +7,6 @@ import { SharedModule } from '@shared/shared.module';
   imports: [SharedModule],
   controllers: [SuperlikersController],
   providers: [SuperlikersService],
+  exports: [SuperlikersService],
 })
 export class SuperlikersModule {}

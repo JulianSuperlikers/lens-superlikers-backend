@@ -7,5 +7,6 @@ import { SharedModule } from '@shared/shared.module';
   imports: [SharedModule],
   controllers: [VeryfiController],
   providers: [VeryfiService],
+  exports: [VeryfiService],
 })
 export class VeryfiModule {}
