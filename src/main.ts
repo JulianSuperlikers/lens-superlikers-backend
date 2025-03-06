@@ -1,7 +1,9 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { json } from 'express';
+import { ConfigService } from '@nestjs/config';
+
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,7 +12,13 @@ async function bootstrap() {
 
   app.use(json({ limit: '50mb' }));
 
-  app.enableCors();
+  const configService = app.get(ConfigService);
+  const nodeEnv = configService.get<string>('NODE_ENV');
+  const allowedOrigins = configService.get<string>('ALLOWED_ORIGINS');
+
+  app.enableCors({
+    origin: nodeEnv === 'production' && allowedOrigins ? allowedOrigins.split(',') : true,
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
