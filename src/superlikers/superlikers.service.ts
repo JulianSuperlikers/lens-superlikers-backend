@@ -83,22 +83,6 @@ export class SuperlikersService {
       const response = await this.http.post<SaleResponse>(url, body);
       return response.invoice;
     } catch (err: unknown) {
-      // if (axios.isAxiosError<{ message: string }>(err)) {
-      //   const message = err.response?.data.message ?? err.message;
-
-      //   await this.sendExternal({
-      //     event: 'veryfi_logs',
-      //     uid,
-      //     campaign,
-      //     properties: {
-      //       ref,
-      //       products: JSON.stringify(products),
-      //       message,
-      //       discount,
-      //     },
-      //   });
-      // }
-
       handleHttpError(err);
     }
   }
