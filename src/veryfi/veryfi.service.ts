@@ -8,6 +8,7 @@ import { HttpClientBase } from '@shared/services/http-client-base/http-client-ba
 import { EnvService } from '@shared/services/env/env.service';
 import { handleHttpError } from '@shared/utils/http-error-handler';
 import { AddTagToDocumentDto } from './dtos/add-tag-document.dto';
+import { GetDocumentDto } from './dtos/get-document.dto';
 
 @Injectable()
 export class VeryfiService {
@@ -73,7 +74,24 @@ export class VeryfiService {
       return response;
     } catch (err) {
       handleHttpError(err);
-      throw new Error('Failed to add tag to document in Veryfi');
+    }
+  }
+
+  async getDocument(getDocumentDto: GetDocumentDto) {
+    const { campaign, documentId } = getDocumentDto;
+
+    const config = this.envService.getConfig(campaign);
+    const { VERYFI_USERNAME, VERYFI_CLIENT_ID, VERYFI_API_KEY } = config;
+
+    const url = `https://api.veryfi.com/api/v8/partner/documents/${documentId}`;
+    const headers = this.getVeryfiHeaders(VERYFI_CLIENT_ID, VERYFI_USERNAME, VERYFI_API_KEY);
+
+    try {
+      const response = await this.http.get<VeryfiReceipt>(url, {}, headers);
+      return response;
+    } catch (err) {
+      handleHttpError(err);
+      throw new Error('Failed to get document in Veryfi');
     }
   }
 

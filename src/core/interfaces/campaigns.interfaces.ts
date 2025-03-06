@@ -1,3 +1,5 @@
+import { VeryfiReceipt } from './veryfi.interfaces';
+
 export interface MicrositeConfig {
   [key: string]: MicrositeDetails;
 }
@@ -9,6 +11,8 @@ export interface MicrositeDetails {
   additionalProductsFields: AdditionalFields;
   tags: string[];
   validationMessages: Record<string, string>;
+  category?: string;
+  properties?: (data: VeryfiReceipt) => Record<string, any>;
 }
 
 export interface AdditionalFields {

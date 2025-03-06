@@ -1,4 +1,5 @@
 import { MicrositeConfig, MicrositeDetails } from '@core/interfaces/campaigns.interfaces';
+import { VeryfiReceipt } from '@core/interfaces/veryfi.interfaces';
 
 const MICROSITE_CONFIG: MicrositeConfig = {
   sz: {
@@ -29,6 +30,10 @@ const MICROSITE_CONFIG: MicrositeConfig = {
       REJECTED: 'La factura no cumple con los criterios necesarios y ha sido rechazada.',
       MANUAL_REVIEW: 'La factura ha sido marcada para revisión manual.',
     },
+    category: 'fisica',
+    properties: (data: VeryfiReceipt) => {
+      return { ticket: data.id };
+    },
   },
   ua: {
     name: 'SABA',
@@ -58,6 +63,7 @@ const MICROSITE_CONFIG: MicrositeConfig = {
       REJECTED: 'La factura no cumple con los criterios necesarios y ha sido rechazada.',
       MANUAL_REVIEW: 'La factura ha sido marcada para revisión manual.',
     },
+    category: 'fisica',
   },
 };
 

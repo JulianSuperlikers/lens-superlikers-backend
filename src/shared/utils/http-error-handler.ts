@@ -1,17 +1,15 @@
-import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
-import { AxiosError } from 'axios';
+import { BadRequestException } from '@nestjs/common';
+import axios from 'axios';
+
 import { ValidationError } from './validation-error';
 
 export const handleHttpError = (err: unknown) => {
-  if (err instanceof AxiosError) {
-    console.log('AxiosError', err);
+  if (axios.isAxiosError<{ message: string }>(err)) {
+    const errorMessage = err.response?.data.message || err.message;
+    throw new BadRequestException(errorMessage);
+  } else if (err instanceof ValidationError) {
     throw new BadRequestException(err.message);
+  } else {
+    throw err;
   }
-
-  if (err instanceof ValidationError) {
-    console.log('ValidationError', err);
-    throw new BadRequestException(err.message);
-  }
-
-  throw new InternalServerErrorException('Ha ocurrido un error');
 };

@@ -31,7 +31,7 @@ export interface VeryfiReceipt {
   is_document: boolean;
   is_duplicate: boolean;
   is_money_in: boolean;
-  line_items: VeryfiLineItem[];
+  line_items: VeryfiProduct[];
   meta: VeryfiMeta;
   notes?: string;
   ocr_text: string;
@@ -70,7 +70,7 @@ export interface VeryfiReceipt {
   vendor: VeryfiVendor;
 }
 
-export interface VeryfiLineItem {
+export interface VeryfiProduct {
   custom_fields?: Record<string, any>;
   date?: string | null;
   description: string;
@@ -222,4 +222,16 @@ export interface DeviceData {
   };
   uuid: string;
   source: string;
+}
+
+export interface WebhookResponse {
+  event: string;
+  data: FieldsData[];
+  start: Date;
+  end: Date;
+}
+
+export interface FieldsData {
+  id: number;
+  changed_fields: string[];
 }

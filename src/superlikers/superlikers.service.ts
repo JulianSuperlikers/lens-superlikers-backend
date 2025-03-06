@@ -2,7 +2,9 @@ import { Injectable } from '@nestjs/common';
 
 import { GetParticipantDto } from './dtos/get-participant.dto';
 import { RegisterSaleDto } from './dtos/register-sale.dto';
-import { GetParticipantResponse, SaleResponse } from '@core/interfaces/superlikers.interefaces';
+import { SendExternalDto } from './dtos/send-external.dto';
+
+import { GetParticipantResponse, SaleResponse } from '@core/interfaces/superlikers.interfaces';
 import { HttpClientBase } from '@shared/services/http-client-base/http-client-base.service';
 import { EnvService } from '@shared/services/env/env.service';
 import { handleHttpError } from '@shared/utils/http-error-handler';
@@ -35,7 +37,30 @@ export class SuperlikersService {
       const response = await this.http.get<GetParticipantResponse>(url, params, headers);
       return response.object;
     } catch (err: unknown) {
-      console.log(err);
+      handleHttpError(err);
+    }
+  }
+
+  async sendExternal(sendExternalDto: SendExternalDto) {
+    const { campaign, uid, properties, event } = sendExternalDto;
+
+    const config = this.envService.getConfig(campaign);
+    const { SUPERLIKERS_URL, SUPERLIKERS_CAMPAIGN_ID, SUPERLIKERS_API_KEY } = config;
+
+    const url = `${SUPERLIKERS_URL}/events`;
+
+    const body = {
+      event,
+      api_key: SUPERLIKERS_API_KEY,
+      campaign: SUPERLIKERS_CAMPAIGN_ID,
+      distinct_id: uid,
+      properties,
+    };
+
+    try {
+      const response = await this.http.post(url, body);
+      return response;
+    } catch (err: unknown) {
       handleHttpError(err);
     }
   }
@@ -58,7 +83,22 @@ export class SuperlikersService {
       const response = await this.http.post<SaleResponse>(url, body);
       return response.invoice;
     } catch (err: unknown) {
-      console.log(err);
+      // if (axios.isAxiosError<{ message: string }>(err)) {
+      //   const message = err.response?.data.message ?? err.message;
+
+      //   await this.sendExternal({
+      //     event: 'veryfi_logs',
+      //     uid,
+      //     campaign,
+      //     properties: {
+      //       ref,
+      //       products: JSON.stringify(products),
+      //       message,
+      //       discount,
+      //     },
+      //   });
+      // }
+
       handleHttpError(err);
     }
   }

@@ -57,6 +57,5 @@ export interface Product {
 
 export interface SaleSummary {
   products: Product[];
-  total: number;
   discount: number;
 }
