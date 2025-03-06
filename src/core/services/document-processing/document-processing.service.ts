@@ -42,8 +42,12 @@ export class DocumentProcessingService {
 
   async webhook(campaign: string, webhookDto: WebhookDto) {
     try {
-      // Fetch and filter approved documents
-      const documents = await this.getApprovedDocuments(campaign, webhookDto);
+      const documentPromises = webhookDto.data.map((item) =>
+        this.veryfiService.getDocument({ campaign, documentId: item.id }),
+      );
+
+      const documentsResponses = await Promise.all(documentPromises);
+      const documents = documentsResponses.filter((document) => document.tags.some((tag) => tag.name === 'APPROVED'));
 
       // Process each approved document using Promise.allSettled
       const results = await Promise.allSettled(
@@ -53,11 +57,13 @@ export class DocumentProcessingService {
       const summary = results.map((result, index) => {
         const error = result.status === 'rejected' ? (result.reason as Error).message : '';
         const document = documents[index].id;
+        const uid = documents[index].notes;
 
         return {
           state: result.status,
           error,
           document,
+          uid,
         };
       });
 
@@ -89,17 +95,5 @@ export class DocumentProcessingService {
     } catch (err) {
       handleHttpError(err);
     }
-  }
-
-  /**
-   * Fetches and filters approved documents from Veryfi.
-   */
-  private async getApprovedDocuments(campaign: string, webhookDto: WebhookDto) {
-    const documentPromises = webhookDto.data.map((item) =>
-      this.veryfiService.getDocument({ campaign, documentId: item.id }),
-    );
-
-    const documents = await Promise.all(documentPromises);
-    return documents.filter((document) => document.tags.some((tag) => tag.name === 'APPROVED'));
   }
 }
