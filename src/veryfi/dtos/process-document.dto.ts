@@ -4,6 +4,7 @@ import { DeviceDataDto } from './device-data.dto';
 
 export class ProcessDocumentDto {
   @ValidateNested()
+  @IsNotEmpty()
   @Type(() => DeviceDataDto)
   deviceData: DeviceDataDto;
 
