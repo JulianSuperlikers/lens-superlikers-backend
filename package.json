@@ -74,6 +74,13 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@superlikers/(.*)$": "<rootDir>/superlikers/$1",
+      "^@veryfi/(.*)$": "<rootDir>/veryfi/$1",
+      "^@shared/(.*)$": "<rootDir>/shared/$1",
+      "^@core/(.*)$": "<rootDir>/core/$1"
+    }
   }
 }
+ 
