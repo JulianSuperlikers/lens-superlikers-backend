@@ -3,7 +3,7 @@ import { MicrositeDetails } from '@core/interfaces/campaigns.interfaces';
 import { VeryfiReceipt } from '@core/interfaces/veryfi.interfaces';
 import { ValidationError } from '@shared/utils/validation-error';
 
-const checkTagsErrors = (data: VeryfiReceipt, micrositeConfig: MicrositeDetails) => {
+export const checkTagsErrors = (data: VeryfiReceipt, micrositeConfig: MicrositeDetails) => {
   const { tags, validationMessages } = micrositeConfig;
   const tag = data.tags.find((item) => tags.includes(item.name));
 
