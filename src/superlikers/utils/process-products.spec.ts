@@ -86,7 +86,6 @@ describe('ProcessProducts', () => {
       (campaignsConstants.getMicrositeConfig as jest.Mock).mockReturnValue(micrositeConfigWithProps);
 
       const result = getSaleBody(document, 'sz');
-      console.log(result);
       expect(result).toHaveProperty('properties', propertiesValue);
     });
   });
