@@ -1,6 +1,6 @@
 import { VeryfiReceipt, VeryfiProduct } from '@core/interfaces/veryfi.interfaces';
 
-const baseReceipt: VeryfiReceipt = {
+export const baseReceipt: VeryfiReceipt = {
   account_number: '414289',
   bill_to: {
     address: null,
@@ -146,7 +146,7 @@ const baseReceipt: VeryfiReceipt = {
   },
 };
 
-const baseProduct: VeryfiProduct = {
+export const baseProduct: VeryfiProduct = {
   custom_fields: {},
   date: null,
   description: 'Sample Product',

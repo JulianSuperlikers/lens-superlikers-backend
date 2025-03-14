@@ -8,7 +8,7 @@ export interface MicrositeDetails {
   name: string;
   url: string;
   uid: string;
-  additionalProductsFields: AdditionalFields;
+  additionalProductsFields?: AdditionalFields;
   tags: string[];
   validationMessages: Record<string, string>;
   category?: string;
