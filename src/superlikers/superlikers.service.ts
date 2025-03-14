@@ -38,6 +38,7 @@ export class SuperlikersService {
       return response.object;
     } catch (err: unknown) {
       handleHttpError(err);
+      throw err;
     }
   }
 
@@ -62,6 +63,7 @@ export class SuperlikersService {
       return response;
     } catch (err: unknown) {
       handleHttpError(err);
+      throw err;
     }
   }
 
@@ -84,6 +86,7 @@ export class SuperlikersService {
       return response.invoice;
     } catch (err: unknown) {
       handleHttpError(err);
+      throw err;
     }
   }
 }
