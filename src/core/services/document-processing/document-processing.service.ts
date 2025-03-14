@@ -34,7 +34,7 @@ export class DocumentProcessingService {
       // Get sale information and register it in Superlikers
       await this.processApprovedDocument(uploadDocumentResponse, campaign);
 
-      return { ok: true, message: 'La factura se subió ccorrectamente.' };
+      return { ok: true, message: 'La factura se subió correctamente.' };
     } catch (err) {
       handleHttpError(err);
     }
