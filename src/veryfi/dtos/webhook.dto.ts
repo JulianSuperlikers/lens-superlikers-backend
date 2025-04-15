@@ -20,12 +20,4 @@ export class WebhookDto {
   @ValidateNested({ each: true })
   @Type(() => FieldsDataDto)
   data: FieldsDataDto[];
-
-  @IsNotEmpty()
-  @IsString()
-  start: Date;
-
-  @IsNotEmpty()
-  @IsString()
-  end: Date;
 }
