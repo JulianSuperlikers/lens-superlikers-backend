@@ -3,11 +3,10 @@ import { Product } from '@core/interfaces/superlikers.interfaces';
 import { VeryfiProduct, VeryfiReceipt } from '@core/interfaces/veryfi.interfaces';
 import { RegisterSaleDto } from '@superlikers/dtos/register-sale.dto';
 
-export const getSaleBody = (document: VeryfiReceipt, campaign: string) => {
+export const getSaleBody = (uid: string, document: VeryfiReceipt, campaign: string) => {
   const micrositeConfig = getMicrositeConfig(campaign);
 
   const ref = String(document.id);
-  const uid = document.notes!;
   const products = extractProductsFromDocument(document, campaign);
   const discount = calculateDiscount(document.line_items);
   const category = micrositeConfig.category;
@@ -27,7 +26,8 @@ export const extractProductsFromDocument = (document: VeryfiReceipt, campaign: s
   const micrositeConfig = getMicrositeConfig(campaign);
   const { additionalProductsFields } = micrositeConfig;
 
-  const productItems = document.line_items.filter((item) => item.tags.includes('PRODUCT_FOUND') && item.total > 0);
+  // const productItems = document.line_items.filter((item) => item.tags.includes('PRODUCT_FOUND') && item.total > 0);
+  const productItems = document.line_items;
 
   const products: Product[] = productItems.map((item) => {
     const { description, product_details, quantity, total } = item;

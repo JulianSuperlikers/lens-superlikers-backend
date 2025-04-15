@@ -103,7 +103,7 @@ describe('DocumentProcessingService', () => {
 
       expect(validateData).toHaveBeenCalledWith(uploadResponse, processDocumentDto.campaign);
 
-      expect(getSaleBody).toHaveBeenCalledWith(uploadResponse, processDocumentDto.campaign);
+      expect(getSaleBody).toHaveBeenCalledWith('user123', uploadResponse, processDocumentDto.campaign);
 
       expect(superlikersService['registerSale']).toHaveBeenCalledWith(dummySale);
 

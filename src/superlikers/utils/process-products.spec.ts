@@ -52,7 +52,7 @@ describe('ProcessProducts', () => {
     });
 
     it('should return sale without properties', () => {
-      const result = getSaleBody(document, campaignMock);
+      const result = getSaleBody('mock-uid', document, campaignMock);
 
       expect(processProducts.extractProductsFromDocument).toHaveBeenCalledWith(document, campaignMock);
       expect(processProducts.calculateDiscount).toHaveBeenCalledWith(products);
@@ -72,7 +72,7 @@ describe('ProcessProducts', () => {
           },
         ],
         ref: '292672510',
-        uid: 'Sample note',
+        uid: 'mock-uid',
       });
     });
 
@@ -85,7 +85,7 @@ describe('ProcessProducts', () => {
       };
       (campaignsConstants.getMicrositeConfig as jest.Mock).mockReturnValue(micrositeConfigWithProps);
 
-      const result = getSaleBody(document, 'sz');
+      const result = getSaleBody('mock-uid', document, 'sz');
       expect(result).toHaveProperty('properties', propertiesValue);
     });
   });

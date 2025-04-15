@@ -32,7 +32,7 @@ export class DocumentProcessingService {
       validateData(uploadDocumentResponse, campaign);
 
       // Get sale information and register it in Superlikers
-      await this.processApprovedDocument(uploadDocumentResponse, campaign);
+      await this.processApprovedDocument(uid, uploadDocumentResponse, campaign);
 
       return { ok: true, message: 'La factura se subió correctamente.' };
     } catch (err) {
@@ -51,7 +51,10 @@ export class DocumentProcessingService {
 
       // Process each approved document using Promise.allSettled
       const results = await Promise.allSettled(
-        documents.map((document) => this.processApprovedDocument(document, campaign)),
+        documents.map((document) => {
+          const uid = document.notes!;
+          return this.processApprovedDocument(uid, document, campaign);
+        }),
       );
 
       const summary = results.map((result, index) => {
@@ -83,9 +86,9 @@ export class DocumentProcessingService {
    * - Registers the sale in Superlikers
    * - Adds points tag in Veryfi
    */
-  private async processApprovedDocument(document: VeryfiReceipt, campaign: string) {
+  private async processApprovedDocument(uid: string, document: VeryfiReceipt, campaign: string) {
     try {
-      const sale = getSaleBody(document, campaign);
+      const sale = getSaleBody(uid, document, campaign);
       const saleResponse = await this.superlikersService.registerSale(sale);
 
       // Add points tag to document
