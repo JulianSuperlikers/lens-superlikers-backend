@@ -26,8 +26,7 @@ export const extractProductsFromDocument = (document: VeryfiReceipt, campaign: s
   const micrositeConfig = getMicrositeConfig(campaign);
   const { additionalProductsFields } = micrositeConfig;
 
-  // const productItems = document.line_items.filter((item) => item.tags.includes('PRODUCT_FOUND') && item.total > 0);
-  const productItems = document.line_items;
+  const productItems = document.line_items.filter((item) => item.tags.includes('PRODUCT_FOUND') && item.total > 0);
 
   const products: Product[] = productItems.map((item) => {
     const { description, product_details, quantity, total } = item;
