@@ -133,8 +133,6 @@ describe('DocumentProcessingService', () => {
         { id: 1, changed_fields: [] },
         { id: 2, changed_fields: [] },
       ],
-      start: new Date(),
-      end: new Date(),
     };
     const campaign = 'testCampaign';
 
