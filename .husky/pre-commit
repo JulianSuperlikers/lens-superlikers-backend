@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run lint-staged to automatically fix and stage files
+npx lint-staged || exit 1
+
+# Run tests
+npm run test || exit 1
