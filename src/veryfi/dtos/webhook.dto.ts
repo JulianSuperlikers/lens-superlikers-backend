@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsNotEmpty, IsNumber, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 class FieldsDataDto {
   @IsNotEmpty()
@@ -20,4 +20,12 @@ export class WebhookDto {
   @ValidateNested({ each: true })
   @Type(() => FieldsDataDto)
   data: FieldsDataDto[];
+
+  @IsString()
+  @IsOptional()
+  start?: string;
+
+  @IsString()
+  @IsOptional()
+  end?: string;
 }
