@@ -73,6 +73,7 @@ describe('VeryfiService', () => {
       browser_fingerprint: {},
       uuid: '12345',
       source: 'mock-source',
+      user_uuid: 'user123',
     };
 
     const uploadDocumentDtoMock: UploadDocumentDto = {

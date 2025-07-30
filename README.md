@@ -86,7 +86,7 @@ Esta aplicación backend sirve como puente entre la plataforma de fidelización 
 
 2. **Flujo de procesamiento de recibos**:
    - Los usuarios cargan recibos/facturas desde la aplicación frontend
-   - El backend envía el documento a Veryfi para procesamiento OCR y extracción de datos
+   - El backend envía el documento a Veryfi para procesamiento y extracción de datos
    - El sistema valida los datos extraídos contra reglas específicas de la campaña
    - Según los resultados de la validación, el recibo puede ser:
      - Aprobado y se otorgan puntos a través de la API de Superlikers
@@ -101,7 +101,7 @@ Esta aplicación backend sirve como puente entre la plataforma de fidelización 
    - Posibles patrones de fraude
 
 4. **Puntos de integración**:
-   - **API de Veryfi**: Para OCR y extracción de datos de recibos
+   - **API de Veryfi**: Para extracción de datos de recibos
    - **API de Superlikers**: Para gestión de usuarios y manejo de puntos/recompensas
 
 ### Endpoints de API

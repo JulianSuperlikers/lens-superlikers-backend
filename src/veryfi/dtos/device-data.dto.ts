@@ -11,4 +11,8 @@ export class DeviceDataDto {
   @IsNotEmpty()
   @IsString()
   source: string;
+
+  @IsNotEmpty()
+  @IsString()
+  user_uuid: string;
 }
