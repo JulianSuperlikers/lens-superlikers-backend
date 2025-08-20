@@ -1,3 +1,4 @@
+import { ProcessDocumentSaleDto } from '@core/dtos/process-document-sale.dto';
 import { VeryfiReceipt } from '@core/interfaces/veryfi.interfaces';
 import { Injectable } from '@nestjs/common';
 
@@ -33,6 +34,26 @@ export class DocumentProcessingService {
 
       // Get sale information and register it in Superlikers
       await this.processApprovedDocument(uid, uploadDocumentResponse, campaign);
+
+      return { ok: true, message: 'La factura se subió correctamente.' };
+    } catch (err) {
+      handleHttpError(err);
+    }
+  }
+
+  async processDocumentSale(processDocumentSaleDto: ProcessDocumentSaleDto) {
+    try {
+      const { uid, document, campaign } = processDocumentSaleDto;
+
+      // Update document with uid
+      const notesData = { notes: uid };
+      await this.veryfiService.updateDocument({ documentId: document.id, campaign, data: notesData });
+
+      // Validate tags
+      validateData(document, campaign);
+
+      // Get sale information and register it in Superlikers
+      await this.processApprovedDocument(uid, document, campaign);
 
       return { ok: true, message: 'La factura se subió correctamente.' };
     } catch (err) {
