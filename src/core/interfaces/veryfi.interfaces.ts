@@ -1,5 +1,6 @@
 export interface VeryfiReceipt {
   account_number?: string | null;
+  barcodes: string[];
   bill_to: {
     address?: string | null;
     name?: string | null;
@@ -28,7 +29,7 @@ export interface VeryfiReceipt {
   insurance?: string | null;
   invoice_number: string;
   is_blurry?: boolean[];
-  is_document: boolean;
+  is_document?: boolean;
   is_duplicate: boolean;
   is_money_in: boolean;
   line_items: VeryfiProduct[];
@@ -56,11 +57,11 @@ export interface VeryfiReceipt {
     parsed_address?: string | null;
   };
   shipping?: number | null;
-  status: string;
+  status?: string;
   store_number?: string | null;
   subtotal: number;
   tags: VeryfiTag[];
-  tax: number;
+  tax?: number | Record<string, any> | null;
   tax_lines: VeryfiTaxLine[];
   tip?: number | null;
   total: number;
@@ -84,6 +85,11 @@ export interface VeryfiProduct {
   normalized_description?: string | null;
   order: number;
   price?: number | null;
+  product_info?: {
+    brand?: string | null;
+    category?: string[];
+    expanded_description?: string | null;
+  };
   product_details: VeryfiProductDetails[];
   quantity: number;
   reference?: string | null;
@@ -117,32 +123,14 @@ export interface VeryfiProductDetails {
 
 export interface VeryfiMeta {
   device_id: string;
-  device_user_uuid: string;
-  fraud: {
-    attribution?: string | null;
-    color: string;
-    decision: string;
-    fraudulent_pdf: { score: number };
-    images: { is_lcd: boolean; score: number }[];
-    pages: { is_lcd: { score: number; value: boolean } }[];
-    score: number;
-    submissions: Record<string, any>;
-    types: string[];
-    version?: string | null;
-  };
-  fraud_review: {
-    decision?: string | null;
-    types: string[];
-  };
+  device_user_uuid: string | null;
+  duplicates: any[];
+  fraud: Record<string, any>;
+  fraud_review: Record<string, any>;
   language: string[];
   ocr_score: number;
   owner: string;
-  pages: {
-    height: number;
-    is_blurry: { score: number; value: boolean };
-    language: string[];
-    width: number;
-  }[];
+  pages: Record<string, any>[];
   processed_pages: number;
   source: string;
   source_documents: {

@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 import { IsArray, IsBoolean, IsInt, IsNumber, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 export class BillToDto {
@@ -146,6 +146,14 @@ export class VeryfiProductDto {
   @IsNumber()
   price?: number | null;
 
+  @IsOptional()
+  @IsObject()
+  product_info?: {
+    brand?: string | null;
+    category?: string[];
+    expanded_description?: string | null;
+  };
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => VeryfiProductDetailsDto)
@@ -277,11 +285,18 @@ export class VeryfiMetaPageDto {
   height: number;
 
   @IsObject()
+  @Transform(({ value }): { score: number; value: boolean } =>
+    typeof value === 'boolean' ? { score: 0, value } : (value as { score: number; value: boolean }),
+  )
   is_blurry: { score: number; value: boolean };
 
   @IsArray()
   @IsString({ each: true })
   language: string[];
+
+  @IsOptional()
+  @IsObject()
+  screenshot?: { score: number; type: string | null };
 
   @IsNumber()
   width: number;
@@ -310,16 +325,18 @@ export class VeryfiMetaDto {
   @IsString()
   device_id: string;
 
+  @IsOptional()
   @IsString()
-  device_user_uuid: string;
+  device_user_uuid: string | null;
+
+  @IsArray()
+  duplicates: any[];
 
   @ValidateNested()
-  @Type(() => VeryfiMetaFraudDto)
-  fraud: VeryfiMetaFraudDto;
+  fraud: Record<string, any>;
 
   @ValidateNested()
-  @Type(() => VeryfiMetaFraudReviewDto)
-  fraud_review: VeryfiMetaFraudReviewDto;
+  fraud_review: Record<string, any>;
 
   @IsArray()
   @IsString({ each: true })
@@ -332,9 +349,7 @@ export class VeryfiMetaDto {
   owner: string;
 
   @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => VeryfiMetaPageDto)
-  pages: VeryfiMetaPageDto[];
+  pages: Record<string, any>[];
 
   @IsNumber()
   processed_pages: number;
@@ -475,6 +490,16 @@ export class VeryfiReceiptDto {
   @IsString()
   account_number?: string | null;
 
+  @IsArray()
+  @Transform(({ value }): string[] => {
+    if (Array.isArray(value)) {
+      return (value as unknown[]).filter((v): v is string | number | boolean => v != null).map((v) => String(v));
+    }
+    return [];
+  })
+  @IsString({ each: true })
+  barcodes: string[];
+
   @ValidateNested()
   @Type(() => BillToDto)
   bill_to: BillToDto;
@@ -558,7 +583,8 @@ export class VeryfiReceiptDto {
   is_blurry?: boolean[];
 
   @IsBoolean()
-  is_document: boolean;
+  @IsOptional()
+  is_document?: boolean;
 
   @IsBoolean()
   is_duplicate: boolean;
@@ -630,7 +656,8 @@ export class VeryfiReceiptDto {
   shipping?: number | null;
 
   @IsString()
-  status: string;
+  @IsOptional()
+  status?: string;
 
   @IsOptional()
   @IsString()
@@ -644,8 +671,8 @@ export class VeryfiReceiptDto {
   @Type(() => VeryfiTagDto)
   tags: VeryfiTagDto[];
 
-  @IsNumber()
-  tax: number;
+  @IsOptional()
+  tax?: number | Record<string, any> | null;
 
   @IsArray()
   @ValidateNested({ each: true })

@@ -2,6 +2,7 @@ import { VeryfiReceipt, VeryfiProduct } from '@core/interfaces/veryfi.interfaces
 
 export const baseReceipt: VeryfiReceipt = {
   account_number: '414289',
+  barcodes: [],
   bill_to: {
     address: null,
     name: null,
@@ -37,6 +38,7 @@ export const baseReceipt: VeryfiReceipt = {
   meta: {
     device_id: '123',
     device_user_uuid: 'abc',
+    duplicates: [],
     fraud: {
       attribution: null,
       color: 'green',
@@ -108,7 +110,6 @@ export const baseReceipt: VeryfiReceipt = {
   store_number: '3764',
   subtotal: 416.43,
   tags: [],
-  tax: 158.6,
   tax_lines: [
     { base: 495.73, name: 'IVA', order: 0, rate: 16, total: 79.3 },
     { base: null, name: 'IVA', order: 1, rate: null, total: 79.3 },
