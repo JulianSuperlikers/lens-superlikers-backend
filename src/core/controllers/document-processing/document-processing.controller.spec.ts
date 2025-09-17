@@ -3,6 +3,7 @@ import { DocumentProcessingController } from './document-processing.controller';
 import { DocumentProcessingService } from '@core/services/document-processing/document-processing.service';
 import { ProcessDocumentDto } from '@veryfi/dtos/process-document.dto';
 import { WebhookDto } from '@veryfi/dtos/webhook.dto';
+import { ProcessDocumentByIdDto } from '@core/dtos/process-document-by-id.dto';
 
 describe('DocumentProcessingController', () => {
   let controller: DocumentProcessingController;
@@ -16,6 +17,7 @@ describe('DocumentProcessingController', () => {
           provide: DocumentProcessingService,
           useValue: {
             processDocument: jest.fn(),
+            processDocumentById: jest.fn(),
             webhook: jest.fn(),
           },
         },
@@ -51,6 +53,32 @@ describe('DocumentProcessingController', () => {
       (service.processDocument as jest.Mock).mockRejectedValueOnce(new Error(errorMessage));
 
       await expect(controller.processDocument(processDocumentDto)).rejects.toThrow(errorMessage);
+    });
+  });
+
+  describe('processDocumentById', () => {
+    const processDocumentByIdDto: ProcessDocumentByIdDto = {
+      documentId: 1,
+      uid: 'user123',
+      campaign: 'testCampaign',
+    } as ProcessDocumentByIdDto;
+
+    it('should call processDocumentById from documentProcessingService and return its result', async () => {
+      const serviceResult = { success: true };
+      (service.processDocumentById as jest.Mock).mockResolvedValueOnce(serviceResult);
+
+      const result = await controller.processDocumentById(processDocumentByIdDto);
+
+      expect(service['processDocumentById']).toHaveBeenCalledTimes(1);
+      expect(service['processDocumentById']).toHaveBeenCalledWith(processDocumentByIdDto);
+      expect(result).toEqual(serviceResult);
+    });
+
+    it('should propagate errors from service.processDocumentById', async () => {
+      const errorMessage = 'Processing failed';
+      (service.processDocumentById as jest.Mock).mockRejectedValueOnce(new Error(errorMessage));
+
+      await expect(controller.processDocumentById(processDocumentByIdDto)).rejects.toThrow(errorMessage);
     });
   });
 
