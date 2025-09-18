@@ -8,6 +8,7 @@ import { handleHttpError } from '@shared/utils/http-error-handler';
 import { validateData } from '@veryfi/utils/validateDocument';
 import { getSaleBody } from '@superlikers/utils/process-products';
 import { DeviceDataDto } from '@veryfi/dtos/device-data.dto';
+import { ProcessDocumentByIdDto } from '@core/dtos/process-document-by-id.dto';
 
 jest.mock('@shared/utils/http-error-handler', () => ({
   handleHttpError: jest.fn(),
@@ -99,7 +100,7 @@ describe('DocumentProcessingService', () => {
       expect(veryfiService['updateDocument']).toHaveBeenCalledWith({
         documentId: uploadResponse.id,
         campaign: processDocumentDto.campaign,
-        data: { notes: processDocumentDto.uid },
+        data: { external_id: processDocumentDto.uid },
       });
 
       expect(validateData).toHaveBeenCalledWith(uploadResponse, processDocumentDto.campaign);
@@ -127,6 +128,69 @@ describe('DocumentProcessingService', () => {
     });
   });
 
+  describe('processDocumentById', () => {
+    const processDocumentByIdDto: ProcessDocumentByIdDto = {
+      uid: 'user123',
+      documentId: 123,
+      campaign: 'testCampaign',
+    };
+
+    it('should process document successfully', async () => {
+      const uploadResponse = { id: 1, tags: [] };
+      (veryfiService.getDocument as jest.Mock).mockResolvedValue(uploadResponse);
+      (veryfiService.updateDocument as jest.Mock).mockResolvedValue({});
+
+      const dummySale = {
+        campaign: processDocumentByIdDto.campaign,
+        uid: processDocumentByIdDto.uid,
+        ref: 'ref1',
+        products: [],
+      };
+      (getSaleBody as jest.Mock).mockReturnValue(dummySale);
+
+      const registerSaleResponse = { points: 10 };
+      (superlikersService.registerSale as jest.Mock).mockResolvedValue(registerSaleResponse);
+
+      (veryfiService.addTagToDocument as jest.Mock).mockResolvedValue({});
+
+      const result = await service.processDocumentById(processDocumentByIdDto);
+
+      expect(veryfiService['getDocument']).toHaveBeenCalledWith({
+        documentId: processDocumentByIdDto.documentId,
+        campaign: processDocumentByIdDto.campaign,
+      });
+
+      expect(veryfiService['updateDocument']).toHaveBeenCalledWith({
+        documentId: uploadResponse.id,
+        campaign: processDocumentByIdDto.campaign,
+        data: { external_id: processDocumentByIdDto.uid },
+      });
+
+      expect(validateData).toHaveBeenCalledWith(uploadResponse, processDocumentByIdDto.campaign);
+
+      expect(getSaleBody).toHaveBeenCalledWith('user123', uploadResponse, processDocumentByIdDto.campaign);
+
+      expect(superlikersService['registerSale']).toHaveBeenCalledWith(dummySale);
+
+      expect(veryfiService['addTagToDocument']).toHaveBeenCalledWith({
+        documentId: uploadResponse.id,
+        campaign: processDocumentByIdDto.campaign,
+        tag: 'points:10',
+      });
+
+      expect(result).toEqual({ ok: true, message: 'La factura se subió correctamente.' });
+    });
+
+    it('should handle errors and call handleHttpError', async () => {
+      const error = new Error('Test error');
+      (veryfiService.getDocument as jest.Mock).mockRejectedValue(error);
+
+      const result = await service.processDocumentById(processDocumentByIdDto);
+      expect(handleHttpError).toHaveBeenCalledWith(error);
+      expect(result).toBeUndefined();
+    });
+  });
+
   describe('webhook', () => {
     const webhookDto: WebhookDto = {
       event: 'someEvent',
@@ -138,8 +202,8 @@ describe('DocumentProcessingService', () => {
     const campaign = 'testCampaign';
 
     it('should process webhook and return summary', async () => {
-      const doc1 = { id: 1, tags: [{ name: 'APPROVED' }], notes: 'user1' };
-      const doc2 = { id: 2, tags: [{ name: 'REJECTED' }], notes: 'user2' };
+      const doc1 = { id: 1, tags: [{ name: 'APPROVED' }], external_id: 'user1' };
+      const doc2 = { id: 2, tags: [{ name: 'REJECTED' }], external_id: 'user2' };
       (veryfiService.getDocument as jest.Mock).mockResolvedValueOnce(doc1);
       (veryfiService.getDocument as jest.Mock).mockResolvedValueOnce(doc2);
 
@@ -162,7 +226,7 @@ describe('DocumentProcessingService', () => {
             state: 'fulfilled',
             error: '',
             document: doc1.id,
-            uid: doc1.notes,
+            uid: doc1.external_id,
           },
         ],
       });
