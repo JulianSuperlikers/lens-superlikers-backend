@@ -56,9 +56,8 @@ export class DocumentProcessingService {
       validateData(document, campaign);
 
       // Get sale information and register it in Superlikers
-      await this.processApprovedDocument(uid, document, campaign);
-
-      return { ok: true, message: 'La factura se subió correctamente.' };
+      const points = await this.processApprovedDocument(uid, document, campaign);
+      return { ok: true, message: 'La factura se subió correctamente.', points };
     } catch (err) {
       handleHttpError(err);
     }
@@ -139,6 +138,8 @@ export class DocumentProcessingService {
       const points = saleResponse?.points ?? 0;
       const tag = `points:${points}`;
       await this.veryfiService.addTagToDocument({ documentId: document.id, campaign, tag });
+
+      return points;
     } catch (err) {
       handleHttpError(err);
     }
