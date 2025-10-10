@@ -17,7 +17,9 @@ export const validateData = (data: VeryfiReceipt, campaign: string) => {
   const micrositeConfig = getMicrositeConfig(campaign);
 
   const validItems = data.line_items.filter((item) => item.tags.includes('PRODUCT_FOUND'));
-  if (validItems.length === 0) throw new ValidationError(`No se encontraron productos en esta factura. Ref ${data.id}`);
+
+  const message = micrositeConfig.validationMessages.NO_PRODUCT_FOUND;
+  if (validItems.length === 0) throw new ValidationError(`${message} Ref ${data.id}`);
 
   checkTagsErrors(data, micrositeConfig);
 };
