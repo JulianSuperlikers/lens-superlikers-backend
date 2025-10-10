@@ -110,9 +110,7 @@ describe('validateDocument', () => {
 
     it('should throw a ValidationError when no valid line items are found', () => {
       expect(() => validateData(receiptWithNoProductFoundMock, 'sz')).toThrow(ValidationError);
-      expect(() => validateData(receiptWithNoProductFoundMock, 'sz')).toThrow(
-        `No se encontraron productos en esta factura. Ref 292672510`,
-      );
+      expect(() => validateData(receiptWithNoProductFoundMock, 'sz')).toThrow(`Product not found error Ref 292672510`);
     });
 
     it('should not throw an error when valid line items exist and no problematic tag is found', () => {
