@@ -4,22 +4,19 @@ import { VeryfiReceipt } from '@core/interfaces/veryfi.interfaces';
 import { ValidationError } from '@shared/utils/validation-error';
 
 export const checkTagsErrors = (data: VeryfiReceipt, micrositeConfig: MicrositeDetails) => {
+  const veryfiTagsNames = data.tags.map((item) => item.name);
+
   const { tags, validationMessages } = micrositeConfig;
-  const tag = data.tags.find((item) => tags.includes(item.name));
+  const tag = tags.find((t) => veryfiTagsNames.includes(t));
 
   if (tag) {
-    const message = validationMessages[tag.name];
+    const message = validationMessages[tag];
     throw new ValidationError(`${message} Ref: ${data.id}`);
   }
 };
 
 export const validateData = (data: VeryfiReceipt, campaign: string) => {
   const micrositeConfig = getMicrositeConfig(campaign);
-
-  const validItems = data.line_items.filter((item) => item.tags.includes('PRODUCT_FOUND'));
-
-  const message = micrositeConfig.validationMessages.NO_PRODUCT_FOUND;
-  if (validItems.length === 0) throw new ValidationError(`${message} Ref ${data.id}`);
 
   checkTagsErrors(data, micrositeConfig);
 };
