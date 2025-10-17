@@ -1,6 +1,11 @@
 import { MicrositeConfig, MicrositeDetails } from '@core/interfaces/campaigns.interfaces';
 import { VeryfiReceipt } from '@core/interfaces/veryfi.interfaces';
 
+/**
+ * ⚠️ IMPORTANTE ⚠️
+ * El orden de los tags es importante debido a que a los primeros se les da más prioridad
+ */
+
 const MICROSITE_CONFIG: MicrositeConfig = {
   sz: {
     name: 'TENA',

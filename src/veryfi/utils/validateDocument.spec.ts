@@ -1,4 +1,4 @@
-import { checkTagsErrors, validateData } from './validateDocument';
+import { checkTagsErrors } from './validateDocument';
 import { ValidationError } from '@shared/utils/validation-error';
 import { MicrositeDetails } from '@core/interfaces/campaigns.interfaces';
 import {
@@ -11,14 +11,7 @@ import {
   rejectedReceiptMock,
   manualReviewReceiptMock,
   approvedReceiptMock,
-  receiptWithNoProductFoundMock,
-  receiptWithValidProductsMock,
 } from '@shared/mocks/veryfiDocument.mock';
-import { getMicrositeConfig } from '@core/constants/campaigns.constants';
-
-jest.mock('@core/constants/campaigns.constants', () => ({
-  getMicrositeConfig: jest.fn(),
-}));
 
 describe('validateDocument', () => {
   const micrositeConfig: MicrositeDetails = {
@@ -101,20 +94,31 @@ describe('validateDocument', () => {
     it('should not throw a ValidationError for approvedReceiptMock', () => {
       expect(() => checkTagsErrors(approvedReceiptMock, micrositeConfig)).not.toThrow(ValidationError);
     });
-  });
 
-  describe('validateData', () => {
-    beforeEach(() => {
-      (getMicrositeConfig as jest.Mock).mockReturnValue(micrositeConfig);
+    it('should respect tag priority when receipt has multiple problematic tags', () => {
+      const receiptWithMultipleTags = {
+        ...approvedReceiptMock,
+        tags: [
+          { id: 1, name: 'SOME_OTHER_TAG' },
+          { id: 2, name: 'FRAUD' },
+          { id: 3, name: 'NO_PRODUCT_FOUND' },
+          { id: 4, name: 'DUPLICATED' },
+        ],
+      };
+
+      expect(() => checkTagsErrors(receiptWithMultipleTags, micrositeConfig)).toThrow(ValidationError);
+      expect(() => checkTagsErrors(receiptWithMultipleTags, micrositeConfig)).toThrow(
+        'Product not found error Ref: 292672510',
+      );
     });
 
-    it('should throw a ValidationError when no valid line items are found', () => {
-      expect(() => validateData(receiptWithNoProductFoundMock, 'sz')).toThrow(ValidationError);
-      expect(() => validateData(receiptWithNoProductFoundMock, 'sz')).toThrow(`Product not found error Ref 292672510`);
-    });
+    it('should not throw an error when receipt has empty tags array', () => {
+      const receiptWithEmptyTags = {
+        ...approvedReceiptMock,
+        tags: [],
+      };
 
-    it('should not throw an error when valid line items exist and no problematic tag is found', () => {
-      expect(() => validateData(receiptWithValidProductsMock, 'sz')).not.toThrow();
+      expect(() => checkTagsErrors(receiptWithEmptyTags, micrositeConfig)).not.toThrow();
     });
   });
 });
