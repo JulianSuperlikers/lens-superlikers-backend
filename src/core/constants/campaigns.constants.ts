@@ -1,5 +1,6 @@
 import { MicrositeConfig, MicrositeDetails } from '@core/interfaces/campaigns.interfaces';
 import { VeryfiReceipt } from '@core/interfaces/veryfi.interfaces';
+import { transformDate } from '@shared/utils/date-transform';
 
 /**
  * ⚠️ IMPORTANTE ⚠️
@@ -37,7 +38,8 @@ const MICROSITE_CONFIG: MicrositeConfig = {
     },
     category: 'fisica',
     properties: (data: VeryfiReceipt) => {
-      return { ticket: data.id };
+      const date = transformDate(data.date);
+      return { ticket: data.id, secondary_date: date };
     },
   },
   ua: {
@@ -69,6 +71,10 @@ const MICROSITE_CONFIG: MicrositeConfig = {
       MANUAL_REVIEW: 'La factura ha sido marcada para revisión manual.',
     },
     category: 'fisica',
+    properties: (data: VeryfiReceipt) => {
+      const date = transformDate(data.date);
+      return { secondary_date: date };
+    },
   },
 };
 
