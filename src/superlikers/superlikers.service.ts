@@ -75,7 +75,13 @@ export class SuperlikersService {
 
     const url = `${SUPERLIKERS_URL}/retail/buy`;
 
-    const body = { api_key: SUPERLIKERS_API_KEY, campaign: SUPERLIKERS_CAMPAIGN_ID, distinct_id: uid, ref, products };
+    const body = {
+      api_key: SUPERLIKERS_API_KEY,
+      campaign: SUPERLIKERS_CAMPAIGN_ID,
+      distinct_id: uid,
+      ref,
+      products,
+    };
     if (date) body['date'] = date;
     if (properties) body['properties'] = properties;
     if (discount) body['discount'] = discount;
