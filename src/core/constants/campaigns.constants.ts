@@ -39,7 +39,7 @@ const MICROSITE_CONFIG: MicrositeConfig = {
     category: 'fisica',
     properties: (data: VeryfiReceipt) => {
       const date = transformDate(data.date);
-      return { ticket: data.id, secondary_date: date };
+      return { ticket: data.id, secondary_date: date, store: data.vendor.name };
     },
   },
   ua: {
@@ -73,7 +73,7 @@ const MICROSITE_CONFIG: MicrositeConfig = {
     category: 'fisica',
     properties: (data: VeryfiReceipt) => {
       const date = transformDate(data.date);
-      return { secondary_date: date };
+      return { ticket: data.id, secondary_date: date, store: data.vendor.name };
     },
   },
 };

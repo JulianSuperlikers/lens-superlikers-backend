@@ -21,9 +21,9 @@ export class VeryfiService {
     const { deviceData, document, campaign } = uploadDocumentDto;
 
     const config = this.envService.getConfig(campaign);
-    const { VERYFI_USERNAME, VERYFI_CLIENT_ID, VERYFI_API_KEY } = config;
+    const { VERYFI_BASE_URL, VERYFI_USERNAME, VERYFI_CLIENT_ID, VERYFI_API_KEY } = config;
 
-    const url = 'https://api.veryfi.com/api/v8/partner/documents';
+    const url = `${VERYFI_BASE_URL}/api/v8/partner/documents`;
     const headers = this.getVeryfiHeaders(VERYFI_CLIENT_ID, VERYFI_USERNAME, VERYFI_API_KEY);
 
     const body = {
@@ -44,9 +44,9 @@ export class VeryfiService {
     const { documentId, campaign, data } = updateDocumentDto;
 
     const config = this.envService.getConfig(campaign);
-    const { VERYFI_USERNAME, VERYFI_CLIENT_ID, VERYFI_API_KEY } = config;
+    const { VERYFI_BASE_URL, VERYFI_USERNAME, VERYFI_CLIENT_ID, VERYFI_API_KEY } = config;
 
-    const url = `https://api.veryfi.com/api/v8/partner/documents/${documentId}`;
+    const url = `${VERYFI_BASE_URL}/api/v8/partner/documents/${documentId}`;
     const headers = this.getVeryfiHeaders(VERYFI_CLIENT_ID, VERYFI_USERNAME, VERYFI_API_KEY);
 
     try {
@@ -62,9 +62,9 @@ export class VeryfiService {
     const { documentId, campaign, tag } = addTagToDocumentDto;
 
     const config = this.envService.getConfig(campaign);
-    const { VERYFI_USERNAME, VERYFI_CLIENT_ID, VERYFI_API_KEY } = config;
+    const { VERYFI_BASE_URL, VERYFI_USERNAME, VERYFI_CLIENT_ID, VERYFI_API_KEY } = config;
 
-    const url = `https://api.veryfi.com/api/v8/partner/documents/${documentId}/tags`;
+    const url = `${VERYFI_BASE_URL}/api/v8/partner/documents/${documentId}/tags`;
     const headers = this.getVeryfiHeaders(VERYFI_CLIENT_ID, VERYFI_USERNAME, VERYFI_API_KEY);
 
     const body = { name: tag };
@@ -81,9 +81,9 @@ export class VeryfiService {
     const { campaign, documentId } = getDocumentDto;
 
     const config = this.envService.getConfig(campaign);
-    const { VERYFI_USERNAME, VERYFI_CLIENT_ID, VERYFI_API_KEY } = config;
+    const { VERYFI_BASE_URL, VERYFI_USERNAME, VERYFI_CLIENT_ID, VERYFI_API_KEY } = config;
 
-    const url = `https://api.veryfi.com/api/v8/partner/documents/${documentId}`;
+    const url = `${VERYFI_BASE_URL}/api/v8/partner/documents/${documentId}`;
     const headers = this.getVeryfiHeaders(VERYFI_CLIENT_ID, VERYFI_USERNAME, VERYFI_API_KEY);
 
     try {
