@@ -22,6 +22,7 @@ const mockHeaders = {
 };
 
 const mockConfig = {
+  VERYFI_BASE_URL: 'https://api.veryfi.com',
   VERYFI_USERNAME: 'mock-username',
   VERYFI_CLIENT_ID: 'mock-client_id',
   VERYFI_API_KEY: 'mock-api_key',
@@ -50,7 +51,7 @@ describe('VeryfiService', () => {
         {
           provide: EnvService,
           useValue: {
-            getConfig: jest.fn(),
+            getConfig: jest.fn().mockReturnValue(mockConfig),
           },
         },
       ],

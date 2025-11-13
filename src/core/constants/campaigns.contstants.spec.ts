@@ -1,4 +1,4 @@
-import { VeryfiReceipt } from '@core/interfaces/veryfi.interfaces';
+import { VeryfiReceipt, VeryfiVendor } from '@core/interfaces/veryfi.interfaces';
 import { getMicrositeConfig } from './campaigns.constants';
 import { transformDate } from '@shared/utils/date-transform';
 
@@ -18,7 +18,11 @@ describe('getMicrositeConfig', () => {
     expect(config.uid).toEqual('nickname');
 
     if (typeof config.properties === 'function') {
-      const sampleReceipt: Partial<VeryfiReceipt> = { id: 12345, date: '2025-09-08 15:07:00' };
+      const sampleReceipt: Partial<VeryfiReceipt> = {
+        id: 12345,
+        date: '2025-09-08 15:07:00',
+        vendor: { name: 'Walmart' } as VeryfiVendor,
+      };
 
       const props = config.properties(sampleReceipt as VeryfiReceipt);
 
@@ -26,6 +30,8 @@ describe('getMicrositeConfig', () => {
 
       expect(props.secondary_date).toBeInstanceOf(Date);
       expect((props.secondary_date as Date).getTime()).toBe(mockDate.getTime());
+
+      expect(props.store).toBe('Walmart');
 
       expect(transformDate).toHaveBeenCalledTimes(1);
       expect(transformDate).toHaveBeenCalledWith('2025-09-08 15:07:00');
