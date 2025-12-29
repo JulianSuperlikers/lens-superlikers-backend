@@ -178,7 +178,7 @@ describe('DocumentProcessingService', () => {
         tag: 'points:10',
       });
 
-      expect(result).toEqual({ ok: true, message: 'La factura se subió correctamente.', points: 10 });
+      expect(result).toEqual({ ok: true, message: 'La factura se subió correctamente.', points: 10, documentId: 123 });
     });
 
     it('should handle errors and call handleHttpError', async () => {
